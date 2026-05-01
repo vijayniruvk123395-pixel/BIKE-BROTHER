@@ -1,34 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
- body { font-family: 'Segoe UI', sans-serif; background: #8b6b02; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
- .welcome-container { background: white; padding: 30px; border-radius: 20px; text-align: center; width: 90%; max-width: 350px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
- .logo-img { width: 100%; max-width: 200px; border-radius: 10px; margin-bottom: 15px; }
- .app-name { font-size: 26px; font-weight: bold; color: #1a237e; }
- .tagline { color: #555; font-size: 14px; margin-bottom: 20px; }
- .fare-card { background: #f0f4f8; padding: 10px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; text-align: left; }
- .input-group { margin-bottom: 15px; }
- input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
- .login-btn { width: 100%; background: #1a237e; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; cursor: pointer; }
-</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f4f4; }
+        #map { height: 300px; width: 100%; border-bottom: 2px solid #1a237e; }
+        .container { padding: 20px; text-align: center; background: white; border-radius: 20px -20px 0 0; margin-top: -20px; position: relative; z-index: 1000; }
+        .logo-small { width: 80px; margin-bottom: 10px; border-radius: 10px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .book-btn { width: 100%; background: #1a237e; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+    </style>
 </head>
 <body>
-<div class="welcome-container">
-    <img src="1777656375997.png" class="logo-img" alt="Bike Brother Logo">
-    <div class="app-name">BIKE BROTHER</div>
-    <div class="tagline">ಬೆಂಗಳೂರು ವೇಗದ ರೈಡಿಂಗ್ ಮತ್ತು ಡೆಲಿವರಿ ಸೇವೆ</div>
-    
-    <div class="fare-card">
-        <b>💰 ಬಾಡಿಗೆ ದರ:</b><br>
-        • ಮೊದಲ 2 ಕಿ.ಮೀ: ₹30<br>
-        • ನಂತರ ಪ್ರತಿ ಕಿ.ಮೀ: ₹10
-    </div>
 
-    <div class="input-group"><input type="text" placeholder="ನಿಮ್ಮ ಹೆಸರು"></div>
-    <div class="input-group"><input type="tel" placeholder="ಮೊಬೈಲ್ ಸಂಖ್ಯೆ"></div>
-    <button class="login-btn" onclick="alert('OTP ಕಳುಹಿಸಲಾಗಿದೆ!')">ಮುಂದುವರಿಯಿರಿ</button>
+<div id="map"></div>
+
+<div class="container">
+    <img src="1777656375997.png" class="logo-small" alt="Logo">
+    <div style="font-weight: bold; color: #1a237e; font-size: 20px;">BIKE BROTHER</div>
+    <p style="font-size: 12px; color: #666;">ಬೆಂಗಳೂರು ವೇಗದ ರೈಡಿಂಗ್</p>
+    
+    <input type="text" placeholder="📍 ಪಿಕ್-ಅಪ್ ಲೊಕೇಶನ್">
+    <input type="text" placeholder="🏁 ಎಲ್ಲಿಗೆ ಹೋಗಬೇಕು?">
+    
+    <button class="book-btn" onclick="alert('ನಿಮ್ಮ ಲೊಕೇಶನ್ ಹುಡುಕಲಾಗುತ್ತಿದೆ...')">ಬುಕ್ ಮಾಡಿ</button>
 </div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // ಬೆಂಗಳೂರು ಲೊಕೇಶನ್ ಸೆಟ್ ಮಾಡಲಾಗುತ್ತಿದೆ
+    var map = L.map('map').setView([12.9716, 77.5946], 12); 
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+    L.marker([12.9716, 77.5946]).addTo(map).bindPopup('BIKE BROTHER ಲಭ್ಯವಿದೆ').openPopup();
+</script>
+
 </body>
 </html>
