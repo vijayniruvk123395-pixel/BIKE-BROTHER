@@ -6,10 +6,10 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f4f4; }
         #map { height: 300px; width: 100%; border-bottom: 2px solid #1a237e; }
-        .container { padding: 20px; text-align: center; background: white; border-radius: 20px -20px 0 0; margin-top: -20px; position: relative; z-index: 1000; }
+        .container { padding: 20px; text-align: center; background: white; border-radius: 20px 20px 0 0; margin-top: -20px; position: relative; z-index: 1000; }
         .logo-small { width: 80px; margin-bottom: 10px; border-radius: 10px; }
         input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .book-btn { width: 100%; background: #1a237e; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .book-btn { width: 100%; background: #25D366; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -21,20 +21,32 @@
     <div style="font-weight: bold; color: #1a237e; font-size: 20px;">BIKE BROTHER</div>
     <p style="font-size: 12px; color: #666;">ಬೆಂಗಳೂರು ವೇಗದ ರೈಡಿಂಗ್</p>
     
-    <input type="text" placeholder="📍 ಪಿಕ್-ಅಪ್ ಲೊಕೇಶನ್">
-    <input type="text" placeholder="🏁 ಎಲ್ಲಿಗೆ ಹೋಗಬೇಕು?">
+    <input type="text" id="custName" placeholder="👤 ನಿಮ್ಮ ಹೆಸರು">
+    <input type="text" id="pickup" placeholder="📍 ಪಿಕ್-ಅಪ್ ಲೊಕೇಶನ್">
+    <input type="text" id="drop" placeholder="🏁 ಎಲ್ಲಿಗೆ ಹೋಗಬೇಕು?">
     
-    <button class="book-btn" onclick="alert('ನಿಮ್ಮ ಲೊಕೇಶನ್ ಹುಡುಕಲಾಗುತ್ತಿದೆ...')">ಬುಕ್ ಮಾಡಿ</button>
+    <button class="book-btn" onclick="sendWhatsApp()">ವಾಟ್ಸಾಪ್ ಮೂಲಕ ಬುಕ್ ಮಾಡಿ 🛵</button>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // ಬೆಂಗಳೂರು ಲೊಕೇಶನ್ ಸೆಟ್ ಮಾಡಲಾಗುತ್ತಿದೆ
     var map = L.map('map').setView([12.9716, 77.5946], 12); 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-    }).addTo(map);
-    L.marker([12.9716, 77.5946]).addTo(map).bindPopup('BIKE BROTHER ಲಭ್ಯವಿದೆ').openPopup();
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    L.marker([12.9716, 77.5946]).addTo(map).bindPopup('BIKE BROTHER').openPopup();
+
+    function sendWhatsApp() {
+        var name = document.getElementById('custName').value;
+        var pickup = document.getElementById('pickup').value;
+        var drop = document.getElementById('drop').value;
+        var myNumber = "91+8867285801"; // ಇಲ್ಲಿ ನಿನ್ನ 10 ಅಂಕಿಯ ಮೊಬೈಲ್ ನಂಬರ್ ಹಾಕು (91 ಇರಲಿ)
+
+        if(name && pickup && drop) {
+            var message = "ಹಲೋ BIKE BROTHER, ನಾನು ರೈಡ್ ಬುಕ್ ಮಾಡಬೇಕಿದೆ.%0A%0A👤 ಹೆಸರು: " + name + "%0A📍 ಪಿಕ್-ಅಪ್: " + pickup + "%0A🏁 ಡ್ರಾಪ್: " + drop;
+            window.open("https://wa.me/" + myNumber + "?text=" + message, '_blank');
+        } else {
+            alert("ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಮಾಹಿತಿಯನ್ನು ಭರ್ತಿ ಮಾಡಿ!");
+        }
+    }
 </script>
 
 </body>
