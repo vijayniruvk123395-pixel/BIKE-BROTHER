@@ -1,8 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f2f5; padding-bottom: 50px; }
+        #map { height: 250px; width: 100%; border-bottom: 3px solid #1a237e; z-index: 1; }
+        .container { padding: 20px; text-align: center; background: white; border-radius: 25px 25px 0 0; margin-top: -25px; position: relative; z-index: 100; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); min-height: 450px; }
+        .logo-small { width: 60px; border-radius: 12px; margin-bottom: 5px; }
+        .offer-banner { background: #fff3e0; color: #e65100; padding: 10px; border-radius: 10px; margin-bottom: 15px; font-size: 13px; font-weight: bold; border: 1px solid #ffe0b2; }
+        .fare-box { background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 8px; margin: 10px 0; font-weight: bold; display: none; border: 1px solid #c8e6c9; }
+        .tab-box { display: flex; justify-content: space-around; margin: 15px 0; background: #f1f1f1; border-radius: 10px; padding: 5px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background: none; }
+        .active-tab { background: #1a237e; color: white; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        .book-btn { width: 100%; background: #25D366; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .pay-section { margin-top: 30px; padding: 15px; border-top: 2px dashed #ddd; }
+        .pay-btn { background: #673ab7; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
+        .hint { font-size: 11px; color: #666; margin-bottom: 10px; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<div class="container">
+    <div class="offer-banner">🎁 ಆಫರ್: ನಿಮ್ಮ ಮೊದಲ ರೈಡ್ ಮೇಲೆ ರಿಯಾಯಿತಿ ಪಡೆಯಿರಿ!</div>
+    
+    <img src="1777656375997.png" class="logo-small" alt="Logo">
+    <div style="font-weight: bold; color: #1a237e; font-size: 22px;">BIKE BROTHER</div>
+    
+    <div id="fareDisplay" class="fare-box">ಅಂದಾಜು ದರ: ₹0</div>
+
+    <div class="tab-box">
+        <button id="btnRide" class="tab-btn active-tab" onclick="showForm('ride')">🛵 Ride</button>
+        <button id="btnDel" class="tab-btn" onclick="showForm('delivery')">📦 Delivery</button>
+    </div>
+
+    <div class="hint">ಸೂಚನೆ: ಮ್ಯಾಪ್ ಮೇಲೆ ಕ್ಲಿಕ್ ಮಾಡಿ ಲೊಕೇಶನ್ ಗುರುತಿಸಿ 📍</div>
 
     <div id="rideForm">
         <input type="text" id="custName" placeholder="👤 ನಿಮ್ಮ ಹೆಸರು">
-        <input type="text" id="pickup" placeholder="📍 ಎಲ್ಲಿಂದ?">
-        <input type="text" id="drop" placeholder="🏁 ಎಲ್ಲಿಗೆ?">
+        <input type="text" id="pickup" placeholder="📍 ಪಿಕ್-ಅಪ್ ಪಾಯಿಂಟ್ (ಮ್ಯಾಪ್ ಕ್ಲಿಕ್ ಮಾಡಿ)" readonly>
+        <input type="text" id="drop" placeholder="🏁 ಡ್ರಾಪ್ ಪಾಯಿಂಟ್ (ಮ್ಯಾಪ್ ಕ್ಲಿಕ್ ಮಾಡಿ)" readonly>
         <button class="book-btn" onclick="sendRide()">ರೈಡ್ ಬುಕ್ ಮಾಡಿ</button>
     </div>
 
@@ -10,7 +50,7 @@
         <input type="text" id="delCustName" placeholder="👤 ನಿಮ್ಮ ಹೆಸರು">
         <input type="text" id="storeName" placeholder="🏪 ಅಂಗಡಿ ಹೆಸರು">
         <input type="text" id="items" placeholder="🛍️ ಏನೇನು ತರಬೇಕು?">
-        <input type="text" id="delAddress" placeholder="🏠 ಡೆಲಿವರಿ ವಿಳಾಸ">
+        <input type="text" id="delAddress" placeholder="🏠 ಡೆಲಿವರಿ ವಿಳಾಸ (ಮ್ಯಾಪ್ ಕ್ಲಿಕ್ ಮಾಡಿ)" readonly>
         <button class="book-btn" style="background: #FF9800;" onclick="sendDel()">ಡೆಲಿವರಿ ಬುಕ್ ಮಾಡಿ</button>
     </div>
 
@@ -22,43 +62,70 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    var map = L.map('map').setView([12.9716, 77.5946], 13);
+    var map = L.map('map').setView([13.0850, 77.5970], 14); 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-    L.marker([12.9716, 77.5946]).addTo(map).bindPopup('BIKE BROTHER');
+
+    var markers = [];
+    var totalFare = 0;
+    var distanceKM = 0;
+
+    map.on('click', function(e) {
+        if (markers.length >= 2) {
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+            document.getElementById('fareDisplay').style.display = 'none';
+        }
+
+        var marker = L.marker(e.latlng).addTo(map);
+        markers.push(marker);
+
+        if (markers.length === 1) {
+            document.getElementById('pickup').value = "📍 ಪಿಕ್-ಅಪ್ ಪಾಯಿಂಟ್ ಗುರುತಿಸಲಾಗಿದೆ";
+            document.getElementById('delAddress').value = "🏠 ಡೆಲಿವರಿ ವಿಳಾಸ ಗುರುತಿಸಲಾಗಿದೆ";
+        } else if (markers.length === 2) {
+            document.getElementById('drop').value = "🏁 ಡ್ರಾಪ್ ಪಾಯಿಂಟ್ ಗುರುತಿಸಲಾಗಿದೆ";
+            calculateDistance();
+        }
+    });
+
+    function calculateDistance() {
+        var p1 = markers[0].getLatLng();
+        var p2 = markers[1].getLatLng();
+        var dist = p1.distanceTo(p2) / 1000; 
+        distanceKM = dist.toFixed(2);
+        
+        // ದರ: Base ₹30 + ₹10/KM
+        totalFare = Math.round(30 + (dist * 10));
+        if(totalFare < 30) totalFare = 30;
+
+        var display = document.getElementById('fareDisplay');
+        display.innerHTML = "ಅಂದಾಜು ದೂರ: " + distanceKM + " KM | ದರ: ₹" + totalFare;
+        display.style.display = 'block';
+    }
 
     var myNum = "918867285801";
 
     function showForm(type) {
-        if(type === 'ride') {
-            document.getElementById('rideForm').style.display = 'block';
-            document.getElementById('deliveryForm').style.display = 'none';
-            document.getElementById('btnRide').classList.add('active-tab');
-            document.getElementById('btnDel').classList.remove('active-tab');
-        } else {
-            document.getElementById('rideForm').style.display = 'none';
-            document.getElementById('deliveryForm').style.display = 'block';
-            document.getElementById('btnDel').classList.add('active-tab');
-            document.getElementById('btnRide').classList.remove('active-tab');
-        }
+        document.getElementById('rideForm').style.display = type === 'ride' ? 'block' : 'none';
+        document.getElementById('deliveryForm').style.display = type === 'delivery' ? 'block' : 'none';
+        document.getElementById('btnRide').className = 'tab-btn' + (type === 'ride' ? ' active-tab' : '');
+        document.getElementById('btnDel').className = 'tab-btn' + (type === 'delivery' ? ' active-tab' : '');
     }
 
     function sendRide() {
         var n = document.getElementById('custName').value;
-        var p = document.getElementById('pickup').value;
-        var d = document.getElementById('drop').value;
-        if(n && p && d) {
-            var msg = "ಹಲೋ BIKE BROTHER, ರೈಡ್ ಬುಕಿಂಗ್ (First Ride Discount Offer):%0A👤 ಹೆಸರು: "+n+"%0A📍 ಪಿಕ್-ಅಪ್: "+p+"%0A🏁 ಡ್ರಾಪ್: "+d;
+        if(n && markers.length === 2) {
+            var msg = "ಹಲೋ BIKE BROTHER, ಹೊಸ ರೈಡ್ ಬುಕಿಂಗ್!%0A👤 ಹೆಸರು: "+n+"%0A📏 ದೂರ: "+distanceKM+" KM%0A💰 ದರ: ₹"+totalFare+"%0A(First Ride Offer Applied!)";
             window.location.href = "https://wa.me/" + myNum + "?text=" + msg;
-        } else { alert("ಮಾಹಿತಿ ಭರ್ತಿ ಮಾಡಿ!"); }
+        } else { alert("ಹೆಸರು ಮತ್ತು ಮ್ಯಾಪ್ ಪಾಯಿಂಟ್ಸ್ ಗುರುತಿಸಿ!"); }
     }
 
     function sendDel() {
         var n = document.getElementById('delCustName').value;
         var s = document.getElementById('storeName').value;
         var i = document.getElementById('items').value;
-        var a = document.getElementById('delAddress').value;
-        if(n && s && i && a) {
-            var msg = "ಹಲೋ BIKE BROTHER, ಡೆಲಿವರಿ ಆರ್ಡರ್ (First Order Discount):%0A👤 ಹೆಸರು: "+n+"%0A🏪 ಅಂಗಡಿ: "+s+"%0A🛍️ ವಸ್ತುಗಳು: "+i+"%0A🏠 ವಿಳಾಸ: "+a;
+        if(n && s && i && markers.length >= 1) {
+            var msg = "ಹಲೋ BIKE BROTHER, ಡೆಲಿವರಿ ಆರ್ಡರ್!%0A👤 ಹೆಸರು: "+n+"%0A🏪 ಅಂಗಡಿ: "+s+"%0A🛍️ ವಸ್ತುಗಳು: "+i+"%0A💰 ದರ: ₹"+totalFare;
             window.location.href = "https://wa.me/" + myNum + "?text=" + msg;
         } else { alert("ಮಾಹಿತಿ ಭರ್ತಿ ಮಾಡಿ!"); }
     }
@@ -68,4 +135,5 @@
         window.location.href = "upi://pay?pa=" + upiId + "&pn=BIKE%20BROTHER&cu=INR";
     }
 </script>
-
+</body>
+</html>
