@@ -5,9 +5,11 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f2f5; padding-bottom: 50px; }
-        #map { height: 200px; width: 100%; border-bottom: 3px solid #1a237e; }
-        .container { padding: 20px; text-align: center; background: white; border-radius: 25px 25px 0 0; margin-top: -25px; position: relative; z-index: 100; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); min-height: 400px; }
+        #map { height: 180px; width: 100%; border-bottom: 3px solid #1a237e; }
+        .container { padding: 20px; text-align: center; background: white; border-radius: 25px 25px 0 0; margin-top: -25px; position: relative; z-index: 100; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); min-height: 450px; }
         .logo-small { width: 60px; border-radius: 12px; margin-bottom: 5px; }
+        .offer-banner { background: #fff3e0; color: #e65100; padding: 10px; border-radius: 10px; margin-bottom: 15px; font-size: 13px; border: 1px solid #ffe0b2; font-weight: bold; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.7;} 100% {opacity: 1;} }
         .tab-box { display: flex; justify-content: space-around; margin: 15px 0; background: #f1f1f1; border-radius: 10px; padding: 5px; }
         .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background: none; }
         .active-tab { background: #1a237e; color: white; }
@@ -22,6 +24,8 @@
 <div id="map"></div>
 
 <div class="container">
+    <div class="offer-banner">🎁 ಆಫರ್: ನಿಮ್ಮ ಮೊದಲ ರೈಡ್ ಮೇಲೆ ವಿಶೇಷ ರಿಯಾಯಿತಿ ಪಡೆಯಿರಿ!</div>
+    
     <img src="1777656375997.png" class="logo-small" alt="Logo">
     <div style="font-weight: bold; color: #1a237e; font-size: 22px;">BIKE BROTHER</div>
     <p style="font-size: 12px; color: #666;">ಬೆಂಗಳೂರು ವೇಗದ ಸೇವೆ 🛵📦</p>
@@ -47,7 +51,7 @@
     </div>
 
     <div class="pay-section">
-        <p style="font-weight: bold; color: #1a237e; margin-bottom: 10px;">ಸುಲಭವಾಗಿ ಪಾವತಿಸಿ (Quick Pay) 💳</p>
+        <p style="font-weight: bold; color: #1a237e; margin-bottom: 10px;">ಸುಲಭವಾಗಿ ಪಾವತಿಸಿ 💳</p>
         <button class="pay-btn" onclick="payUPI()">Pay with PhonePe / GPay</button>
     </div>
 </div>
@@ -79,7 +83,7 @@
         var p = document.getElementById('pickup').value;
         var d = document.getElementById('drop').value;
         if(n && p && d) {
-            var msg = "ಹಲೋ BIKE BROTHER, ರೈಡ್ ಬುಕಿಂಗ್:%0A👤 ಹೆಸರು: "+n+"%0A📍 ಪಿಕ್-ಅಪ್: "+p+"%0A🏁 ಡ್ರಾಪ್: "+d;
+            var msg = "ಹಲೋ BIKE BROTHER, ರೈಡ್ ಬುಕಿಂಗ್ (First Ride Discount Offer):%0A👤 ಹೆಸರು: "+n+"%0A📍 ಪಿಕ್-ಅಪ್: "+p+"%0A🏁 ಡ್ರಾಪ್: "+d;
             window.location.href = "https://wa.me/" + myNum + "?text=" + msg;
         } else { alert("ಮಾಹಿತಿ ಭರ್ತಿ ಮಾಡಿ!"); }
     }
@@ -90,15 +94,14 @@
         var i = document.getElementById('items').value;
         var a = document.getElementById('delAddress').value;
         if(n && s && i && a) {
-            var msg = "ಹಲೋ BIKE BROTHER, ಡೆಲಿವರಿ ಆರ್ಡರ್:%0A👤 ಹೆಸರು: "+n+"%0A🏪 ಅಂಗಡಿ: "+s+"%0A🛍️ ವಸ್ತುಗಳು: "+i+"%0A🏠 ವಿಳಾಸ: "+a;
+            var msg = "ಹಲೋ BIKE BROTHER, ಡೆಲಿವರಿ ಆರ್ಡರ್ (First Order Discount):%0A👤 ಹೆಸರು: "+n+"%0A🏪 ಅಂಗಡಿ: "+s+"%0A🛍️ ವಸ್ತುಗಳು: "+i+"%0A🏠 ವಿಳಾಸ: "+a;
             window.location.href = "https://wa.me/" + myNum + "?text=" + msg;
         } else { alert("ಮಾಹಿತಿ ಭರ್ತಿ ಮಾಡಿ!"); }
     }
 
     function payUPI() {
         var upiId = "8867285801@ybl"; 
-        var upiUrl = "upi://pay?pa=" + upiId + "&pn=BIKE%20BROTHER&cu=INR";
-        window.location.href = upiUrl;
+        window.location.href = "upi://pay?pa=" + upiId + "&pn=BIKE%20BROTHER&cu=INR";
     }
 </script>
 </body>
